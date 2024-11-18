@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashley Paston - Portfolio</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #4a0404;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        nav {
+            background-color: #660606;
+            padding: 1rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        section {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        footer {
+            background-color: #4a0404;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ashley Paston</h1>
+        <p>Web Developer | Designer | Creative Thinker</p>
+    </header>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <section id="about">
+        <h2>About Me</h2>
+        <p>Welcome to my portfolio! I'm a passionate developer with expertise in web development and design. 
+           I love creating elegant solutions to complex problems.</p>
+    </section>
+
+    <section id="projects">
+        <h2>Featured Projects</h2>
+        <div class="project-grid">
+            <div class="project-card">
+                <h3>Project 1</h3>
+                <p>Description of your amazing project goes here.</p>
+                <a href="#">View Project</a>
+            </div>
+            <div class="project-card">
+                <h3>Project 2</h3>
+                <p>Description of your amazing project goes here.</p>
+                <a href="#">View Project</a>
+            </div>
+            <div class="project-card">
+                <h3>Project 3</h3>
+                <p>Description of your amazing project goes here.</p>
+                <a href="#">View Project</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <p>Email: your.email@example.com</p>
+        <p>LinkedIn: <a href="#">your-linkedin-profile</a></p>
+        <p>GitHub: <a href="#">your-github-profile</a></p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Ashley Paston. All rights reserved.</p>
+    </footer>
+</body>
+</html>
