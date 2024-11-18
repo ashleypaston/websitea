@@ -86,7 +86,7 @@
 <body>
     <header>
         <h1>Ashley Paston</h1>
-        <p>Web Developer | Designer | Creative Thinker</p>
+        <p>Welcome to my page!</p>
     </header>
 
     <nav>
@@ -103,34 +103,37 @@
 
     <section id="projects">
         <h2>Boggle!</h2>
-        <div class="boggle-grid">
-            <div class="boggle-cell">A</div>
-            <div class="boggle-cell">B</div>
-            <div class="boggle-cell">C</div>
-            <div class="boggle-cell">D</div>
-            <div class="boggle-cell">E</div>
-            <div class="boggle-cell">F</div>
-            <div class="boggle-cell">G</div>
-            <div class="boggle-cell">H</div>
-            <div class="boggle-cell">I</div>
-            <div class="boggle-cell">J</div>
-            <div class="boggle-cell">K</div>
-            <div class="boggle-cell">L</div>
-            <div class="boggle-cell">M</div>
-            <div class="boggle-cell">N</div>
-            <div class="boggle-cell">O</div>
-            <div class="boggle-cell">P</div>
-            <div class="boggle-cell">Qu</div>
-            <div class="boggle-cell">R</div>
-            <div class="boggle-cell">S</div>
-            <div class="boggle-cell">T</div>
-            <div class="boggle-cell">U</div>
-            <div class="boggle-cell">V</div>
-            <div class="boggle-cell">W</div>
-            <div class="boggle-cell">X</div>
-            <div class="boggle-cell">Y</div>
-        </div>
+        <div class="boggle-grid" id="boggleGrid"></div>
     </section>
+
+    <script>
+        function initializeBoggleBoard() {
+            // Common letters with vowels and frequent consonants
+            const letters = [
+                'A', 'A', 'A', 'E', 'E', 'E', 'I', 'I', 'O', 'O', 'U',
+                'B', 'C', 'D', 'F', 'G', 'H', 'L', 'M', 'N', 'P', 'Qu', 'R',
+                'S', 'S', 'T', 'T', 'W', 'Y'
+            ];
+            
+            const grid = document.getElementById('boggleGrid');
+            grid.innerHTML = ''; // Clear existing grid
+            
+            // Create 25 cells (5x5 grid)
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'boggle-cell';
+                
+                // Get random letter from our array
+                const randomIndex = Math.floor(Math.random() * letters.length);
+                cell.textContent = letters[randomIndex];
+                
+                grid.appendChild(cell);
+            }
+        }
+
+        // Initialize board when page loads
+        initializeBoggleBoard();
+    </script>
 
     <section id="contact">
         <h2>Contact Me</h2>
