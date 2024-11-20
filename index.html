@@ -187,6 +187,7 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <header>
@@ -289,9 +290,15 @@
 
         function submitWord() {
             if (currentWord.length >= 3) {
-                // You might want to replace this with a proper dictionary check
-                if (isValidWord(currentWord.toLowerCase())) {
+                if (isValidWord(currentWord.toLowerCase()) && !foundWords.has(currentWord)) {
                     foundWords.add(currentWord);
+                    // Trigger confetti only when a new word is found
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#6B4CE6', '#FFD700', '#FF69B4', '#00FF00']
+                    });
                 }
             }
             clearSelection();
