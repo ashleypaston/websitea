@@ -259,19 +259,28 @@
         }
 
         function handleCellClick(cell) {
-            if (selectedCells.includes(cell)) {
-                return; // Prevent selecting the same cell twice
+            const cellIndex = selectedCells.indexOf(cell);
+            
+            if (cellIndex !== -1) {
+                // Unselect this cell and all cells selected after it
+                for (let i = selectedCells.length - 1; i >= cellIndex; i--) {
+                    selectedCells[i].style.backgroundColor = 'white';
+                    selectedCells.pop();
+                }
+                currentWord = selectedCells.map(cell => cell.textContent).join('');
+            } else {
+                // Select new cell
+                selectedCells.push(cell);
+                cell.style.backgroundColor = '#ffeb3b'; // Highlight selected cell
+                currentWord = selectedCells.map(cell => cell.textContent).join('');
             }
-
-            selectedCells.push(cell);
-            cell.style.backgroundColor = '#ffeb3b'; // Highlight selected cell
-            currentWord += cell.textContent;
+            
             updateDisplay();
         }
 
         function clearSelection() {
             selectedCells.forEach(cell => {
-                cell.style.backgroundColor = '#f0f0f0';
+                cell.style.backgroundColor = 'white';
             });
             selectedCells = [];
             currentWord = '';
