@@ -103,6 +103,11 @@
     <section id="projects">
         <h2>Boggle!</h2>
         <div class="boggle-grid" id="boggleGrid"></div>
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="initializeBoggleBoard()">New Board</button>
+            <button onclick="findWords()">Answers</button>
+        </div>
+        <div id="wordList" style="margin-top: 20px;"></div>
     </section>
 
     <script>
@@ -132,12 +137,35 @@
 
         // Initialize board when page loads
         initializeBoggleBoard();
+
+        function findWords() {
+            // Get current board state
+            const cells = document.querySelectorAll('.boggle-cell');
+            const board = [];
+            let row = [];
+            
+            cells.forEach((cell, index) => {
+                row.push(cell.textContent);
+                if ((index + 1) % 5 === 0) {
+                    board.push(row);
+                    row = [];
+                }
+            });
+
+            // For now, just display a placeholder message
+            const wordList = document.getElementById('wordList');
+            wordList.innerHTML = `
+                <h3>Found Words:</h3>
+                <p>This feature is coming soon! It will find all possible words in the Boggle board.</p>
+                <p>The current board state has been captured and can be processed to find valid words.</p>
+            `;
+        }
     </script>
 
     <section id="contact">
         <h2>Contact Me</h2>
         <p>Email: ashleypaston37@gmail.com</p>
-        <p>GitHub: <a href="#">your-github-profile</a></p>
+
     </section>
 
     <footer>
