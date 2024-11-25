@@ -186,6 +186,26 @@
                 max-width: 1200px;
             }
         }
+
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-variant-numeric: tabular-nums;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        .timer.warning {
+            color: #ff4444;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
@@ -208,6 +228,7 @@
 
     <section id="boggle">
         <h2>Boggle!</h2>
+        <div id="timer" class="timer">2:00</div>
         <div class="boggle-grid" id="boggleGrid"></div>
         <div style="text-align: center; margin: 20px 0;">
             <button onclick="initializeBoggleBoard()">New Board</button>
@@ -226,6 +247,8 @@
         let selectedCells = [];
         let foundWords = new Set();
         let currentWord = '';
+        let timerInterval;
+        let timeLeft;
 
         function initializeBoggleBoard() {
             // Common letters with vowels and frequent consonants
@@ -257,6 +280,15 @@
             currentWord = '';
             foundWords.clear();
             updateDisplay();
+            document.getElementById('timer').classList.remove('warning');
+            startTimer();
+            
+            // Enable all cells
+            const cells = document.querySelectorAll('.boggle-cell');
+            cells.forEach(cell => {
+                cell.style.pointerEvents = 'auto';
+                cell.style.opacity = '1';
+            });
         }
 
         function handleCellClick(cell) {
@@ -338,6 +370,50 @@
             // This is a placeholder - you should replace it with a proper dictionary
             // For now, let's accept any word 3 letters or longer
             return word.length >= 3;
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 120; // 2 minutes in seconds
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+                
+                // Add warning class when 30 seconds or less remain
+                if (timeLeft <= 30) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function endGame() {
+            // Disable the board
+            const cells = document.querySelectorAll('.boggle-cell');
+            cells.forEach(cell => {
+                cell.style.pointerEvents = 'none';
+                cell.style.opacity = '0.7';
+            });
+            
+            // Show final score with confetti
+            confetti({
+                particleCount: 200,
+                spread: 160,
+                origin: { y: 0.6 }
+            });
         }
 
         // Initialize board when page loads
