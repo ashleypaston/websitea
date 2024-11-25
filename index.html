@@ -186,8 +186,69 @@
                 max-width: 1200px;
             }
         }
+
+        /* Add these styles in the <style> section */
+        .panels-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .panel {
+            background-color: var(--gray-light);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .panel h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        const quotes = [
+            "The only way to do great work is to love what you do. - Steve Jobs",
+            "Innovation distinguishes between a leader and a follower. - Steve Jobs",
+            "Stay hungry, stay foolish. - Stewart Brand",
+            "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+            "Code is like humor. When you have to explain it, it's bad. - Cory House"
+        ];
+
+        function updatePanels() {
+            // Update quote
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quote').textContent = randomQuote;
+
+            // Update date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
+
+            // Update weather
+            fetch('https://api.openweathermap.org/data/2.5/weather?q=San Francisco&appid=2aa38ed7e327ec55db5a98a7b051d273&units=imperial')
+                .then(response => response.json())
+                .then(data => {
+                    const temp = Math.round(data.main.temp);
+                    const description = data.weather[0].description;
+                    document.getElementById('weather').innerHTML = `${temp}°F<br>${description}`;
+                })
+                .catch(error => {
+                    document.getElementById('weather').textContent = 'Weather unavailable';
+                });
+        }
+
+        // Run when page loads
+        window.addEventListener('load', updatePanels);
+    </script>
 </head>
 <body>
     <header>
@@ -197,193 +258,29 @@
 
     <nav>
         <a href="#about">About</a>
-        <a href="#boggle">Boggle</a>
+        <a href="boggle.html">Boggle</a>
         <a href="#contact">Contact</a>
     </nav>
 
     <section id="about">
         <h2>About Me</h2>
-        <p>Welcome to my home page! I am learning to code, and this is my first stab at it. Enjoy the Boggle :)</p>
-    </section>
-
-    <section id="boggle">
-        <h2>Boggle!</h2>
-        <div id="timer" style="text-align: center; font-size: 1.5em; margin-bottom: 20px;">2:00</div>
-        <div class="boggle-grid" id="boggleGrid"></div>
-        <div style="text-align: center; margin: 20px 0;">
-            <button onclick="initializeBoggleBoard()">New Board</button>
-            <button onclick="submitWord()">Submit Word</button>
-            <button onclick="clearSelection()">Clear Selection</button>
-        </div>
-        <div id="currentWord" style="text-align: center; margin: 10px 0; font-size: 1.2em;"></div>
-        <div id="foundWords" style="text-align: center; margin-top: 20px;">
-            <h3>Found Words:</h3>
-            <div id="wordList"></div>
-            <div id="points" style="margin-top: 15px; font-size: 1.2em; font-weight: bold;"></div>
+        <p>Welcome to my home page! I am learning to code, and this is my first stab at it. Check out my Boggle game!</p>
+        
+        <div class="panels-container">
+            <div class="panel">
+                <h3>Daily Inspiration</h3>
+                <p id="quote"></p>
+            </div>
+            <div class="panel">
+                <h3>SF Weather</h3>
+                <p id="weather"></p>
+            </div>
+            <div class="panel">
+                <h3>Today's Date</h3>
+                <p id="date"></p>
+            </div>
         </div>
     </section>
-
-    <script>
-        let selectedCells = [];
-        let foundWords = new Set();
-        let currentWord = '';
-        let timerInterval;
-        let timeLeft;
-
-        function initializeBoggleBoard() {
-            // Common letters with vowels and frequent consonants
-            const letters = [
-                'A', 'A', 'A', 'E', 'E', 'E', 'I', 'I', 'O', 'O', 'U',
-                'B', 'C', 'D', 'F', 'G', 'H', 'L', 'M', 'N', 'P', 'Qu', 'R',
-                'S', 'S', 'T', 'T', 'W', 'Y'
-            ];
-            
-            const grid = document.getElementById('boggleGrid');
-            grid.innerHTML = ''; // Clear existing grid
-            
-            // Create 25 cells (5x5 grid)
-            for (let i = 0; i < 25; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'boggle-cell';
-                cell.dataset.row = Math.floor(i / 5);
-                cell.dataset.col = i % 5;
-                
-                const randomIndex = Math.floor(Math.random() * letters.length);
-                cell.textContent = letters[randomIndex];
-                
-                cell.addEventListener('click', () => handleCellClick(cell));
-                grid.appendChild(cell);
-            }
-            
-            // Reset game state
-            selectedCells = [];
-            currentWord = '';
-            foundWords.clear();
-            
-            // Reset and start timer
-            clearInterval(timerInterval);
-            startTimer();
-            
-            updateDisplay();
-        }
-
-        function handleCellClick(cell) {
-            const cellIndex = selectedCells.indexOf(cell);
-            
-            if (cellIndex !== -1) {
-                // Unselect this cell and all cells selected after it
-                for (let i = selectedCells.length - 1; i >= cellIndex; i--) {
-                    selectedCells[i].style.backgroundColor = 'white';
-                    selectedCells.pop();
-                }
-                currentWord = selectedCells.map(cell => cell.textContent).join('');
-            } else {
-                // Select new cell
-                selectedCells.push(cell);
-                cell.style.backgroundColor = '#ffeb3b'; // Highlight selected cell
-                currentWord = selectedCells.map(cell => cell.textContent).join('');
-            }
-            
-            updateDisplay();
-        }
-
-        function clearSelection() {
-            selectedCells.forEach(cell => {
-                cell.style.backgroundColor = 'white';
-            });
-            selectedCells = [];
-            currentWord = '';
-            updateDisplay();
-        }
-
-        function submitWord() {
-            if (currentWord.length >= 3) {
-                if (isValidWord(currentWord.toLowerCase()) && !foundWords.has(currentWord)) {
-                    foundWords.add(currentWord);
-                    // Trigger confetti only when a new word is found
-                    confetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: { y: 0.6 },
-                        colors: ['#6B4CE6', '#FFD700', '#FF69B4', '#00FF00']
-                    });
-                }
-            }
-            clearSelection();
-            updateDisplay();
-        }
-
-        function calculatePoints(word) {
-            const length = word.length;
-            if (length <= 3) return 0;
-            if (length <= 10) return length - 3;
-            return length - 3; // For words longer than 10 letters
-        }
-
-        function getTotalPoints() {
-            return Array.from(foundWords)
-                .reduce((total, word) => total + calculatePoints(word), 0);
-        }
-
-        function updateDisplay() {
-            document.getElementById('currentWord').textContent = currentWord;
-            const wordList = document.getElementById('wordList');
-            wordList.innerHTML = Array.from(foundWords)
-                .sort()
-                .map(word => `<div onclick="removeWord('${word}')">${word} (${word.length} letters, ${calculatePoints(word)} pts)</div>`)
-                .join('');
-            
-            document.getElementById('points').textContent = `Total Points: ${getTotalPoints()}`;
-        }
-
-        function removeWord(word) {
-            foundWords.delete(word);
-            updateDisplay();
-        }
-
-        // Simple dictionary check - replace with a proper dictionary
-        function isValidWord(word) {
-            // This is a placeholder - you should replace it with a proper dictionary
-            // For now, let's accept any word 3 letters or longer
-            return word.length >= 3;
-        }
-
-        function startTimer() {
-            timeLeft = 120; // 2 minutes in seconds
-            updateTimerDisplay();
-            
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                
-                if (timeLeft <= 0) {
-                    endGame();
-                }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timer').textContent = 
-                `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function endGame() {
-            clearInterval(timerInterval);
-            // Disable cell clicking
-            const cells = document.querySelectorAll('.boggle-cell');
-            cells.forEach(cell => {
-                cell.style.pointerEvents = 'none';
-            });
-            
-            // Show game over message
-            alert(`Game Over! Final Score: ${getTotalPoints()} points`);
-        }
-
-        // Initialize board when page loads
-        initializeBoggleBoard();
-    </script>
 
     <section id="contact">
         <h2>Contact Me</h2>
