@@ -25,11 +25,33 @@
         }
         
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            background: url('wolfgang.png') no-repeat center center;
+            background-size: cover;
             color: white;
             text-align: center;
             padding: 4rem 2rem;
             margin-bottom: 2rem;
+            position: relative;
+        }
+
+        /* Add a subtle dark overlay to ensure text readability */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                rgba(0, 0, 0, 0.4),
+                rgba(0, 0, 0, 0.6)
+            );
+        }
+
+        /* Ensure text stays on top of the overlay */
+        header h1, header p {
+            position: relative;
+            z-index: 1;
         }
 
         header h1 {
@@ -311,55 +333,46 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(0, 0, 0, 0.2),
-                rgba(0, 0, 0, 0.4)
-            );
         }
 
         .calendar {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.2);
             padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
             min-width: 200px;
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .calendar-month {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
             font-weight: 300;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 2px;
             margin-bottom: 0.5rem;
         }
 
         .calendar-day {
-            font-size: 5rem;
+            font-size: 4rem;
             font-weight: 200;
             line-height: 1;
             color: white;
             margin: 0.5rem 0;
-            font-family: "Helvetica Neue", sans-serif;
         }
 
         .calendar-weekday {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 300;
-            letter-spacing: 2px;
             margin-bottom: 0.5rem;
-            text-transform: uppercase;
         }
 
         .calendar-year {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
-            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
             font-weight: 300;
         }
 
@@ -402,7 +415,7 @@
                     <small id="quote-author"></small>
                 </div>
             </div>
-            <div class="panel calendar-panel" style="background-image: url('wolfgang.png')">
+            <div class="panel calendar-panel" style="background-image: url('emily.png')">
                 <div class="panel-content">
                     <div class="calendar">
                         <div class="calendar-month" id="calendar-month"></div>
