@@ -7,6 +7,44 @@
     <style>
         /* Copy all the styles from index.html, but you can remove the About and Contact specific styles */
         /* ... existing styles ... */
+        #board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .cell {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #controls {
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        #word-input {
+            padding: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #found-words {
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        #word-list {
+            list-style-type: none;
+            padding: 0;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
