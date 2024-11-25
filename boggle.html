@@ -22,9 +22,18 @@
     </nav>
 
     <section id="boggle">
-        <!-- Copy the entire boggle section from index.html -->
         <div id="timer" style="text-align: center; font-size: 1.5em; margin-bottom: 20px;">2:00</div>
-        <!-- ... rest of the boggle content ... -->
+        <div id="board"></div>
+        <div id="controls">
+            <input type="text" id="word-input" placeholder="Enter word" autocomplete="off">
+            <button onclick="submitWord()">Submit</button>
+            <button onclick="startNewGame()">New Game</button>
+        </div>
+        <div id="score">Score: 0</div>
+        <div id="found-words">
+            <h3>Found Words:</h3>
+            <ul id="word-list"></ul>
+        </div>
     </section>
 
     <footer>
@@ -32,8 +41,107 @@
     </footer>
 
     <script>
-        // Copy all the JavaScript from index.html
-        // ... existing JavaScript ...
+        let board = [];
+        let score = 0;
+        let foundWords = new Set();
+        let timer;
+        let timeLeft;
+
+        function generateBoard() {
+            const dice = [
+                'AAEEGN', 'ABBJOO', 'ACHOPS', 'AFFKPS',
+                'AOOTTW', 'CIMOTU', 'DEILRX', 'DELRVY',
+                'DISTTY', 'EEGHNW', 'EEINSU', 'EHRTVW',
+                'EIOSST', 'ELRTTY', 'HIMNQU', 'HLNNRZ'
+            ];
+            board = [];
+            for (let i = 0; i < 4; i++) {
+                board[i] = [];
+                for (let j = 0; j < 4; j++) {
+                    const dieIndex = i * 4 + j;
+                    const die = dice[dieIndex];
+                    const letterIndex = Math.floor(Math.random() * 6);
+                    board[i][j] = die.charAt(letterIndex);
+                }
+            }
+            displayBoard();
+        }
+
+        function displayBoard() {
+            const boardDiv = document.getElementById('board');
+            boardDiv.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.textContent = board[i][j];
+                    boardDiv.appendChild(cell);
+                }
+            }
+        }
+
+        function submitWord() {
+            const input = document.getElementById('word-input');
+            const word = input.value.toUpperCase();
+            if (word.length < 3) {
+                alert('Words must be at least 3 letters long!');
+            } else if (foundWords.has(word)) {
+                alert('You already found that word!');
+            } else if (isValidWord(word)) {
+                foundWords.add(word);
+                updateScore(word);
+                updateWordList(word);
+                if (word.length >= 8) {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+            } else {
+                alert('Invalid word!');
+            }
+            input.value = '';
+        }
+
+        function startTimer() {
+            timeLeft = 120; // 2 minutes
+            updateTimerDisplay();
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    alert('Game Over! Final score: ' + score);
+                    document.getElementById('word-input').disabled = true;
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startNewGame() {
+            board = [];
+            score = 0;
+            foundWords.clear();
+            document.getElementById('score').textContent = 'Score: 0';
+            document.getElementById('word-list').innerHTML = '';
+            document.getElementById('word-input').disabled = false;
+            if (timer) clearInterval(timer);
+            generateBoard();
+            startTimer();
+        }
+
+        // Add any remaining helper functions (isValidWord, updateScore, updateWordList)
+        // ... existing helper functions ...
+
+        // Start the game when the page loads
+        window.onload = startNewGame;
     </script>
 </body>
 </html> 
