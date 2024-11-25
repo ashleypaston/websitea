@@ -208,6 +208,7 @@
 
     <section id="boggle">
         <h2>Boggle!</h2>
+        <div id="timer" style="text-align: center; font-size: 1.5em; margin-bottom: 20px;">2:00</div>
         <div class="boggle-grid" id="boggleGrid"></div>
         <div style="text-align: center; margin: 20px 0;">
             <button onclick="initializeBoggleBoard()">New Board</button>
@@ -226,6 +227,8 @@
         let selectedCells = [];
         let foundWords = new Set();
         let currentWord = '';
+        let timerInterval;
+        let timeLeft;
 
         function initializeBoggleBoard() {
             // Common letters with vowels and frequent consonants
@@ -256,6 +259,11 @@
             selectedCells = [];
             currentWord = '';
             foundWords.clear();
+            
+            // Reset and start timer
+            clearInterval(timerInterval);
+            startTimer();
+            
             updateDisplay();
         }
 
@@ -338,6 +346,39 @@
             // This is a placeholder - you should replace it with a proper dictionary
             // For now, let's accept any word 3 letters or longer
             return word.length >= 3;
+        }
+
+        function startTimer() {
+            timeLeft = 120; // 2 minutes in seconds
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            // Disable cell clicking
+            const cells = document.querySelectorAll('.boggle-cell');
+            cells.forEach(cell => {
+                cell.style.pointerEvents = 'none';
+            });
+            
+            // Show game over message
+            alert(`Game Over! Final Score: ${getTotalPoints()} points`);
         }
 
         // Initialize board when page loads
