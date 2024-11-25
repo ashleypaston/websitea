@@ -305,6 +305,66 @@
             opacity: 0.9;
             font-size: 0.9rem;
         }
+
+        .calendar-panel .panel-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .calendar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-width: 200px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .calendar-month {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .calendar-day {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+
+        .calendar-weekday {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .calendar-year {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .panel #artist-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .panel .artwork-title {
+            font-style: italic;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
@@ -333,16 +393,21 @@
                     <small id="quote-author"></small>
                 </div>
             </div>
-            <div class="panel" style="background-image: url('https://images.unsplash.com/photo-1509718443690-d8e2fb3474b7')">
+            <div class="panel calendar-panel" style="background-image: url('https://images.unsplash.com/photo-1517329782449-810562a4ec2f')">
                 <div class="panel-content">
-                    <h3>Problem Solving</h3>
-                    <p>Creating efficient solutions through code</p>
+                    <div class="calendar">
+                        <div class="calendar-month" id="calendar-month"></div>
+                        <div class="calendar-day" id="calendar-day"></div>
+                        <div class="calendar-weekday" id="calendar-weekday"></div>
+                        <div class="calendar-year" id="calendar-year"></div>
+                    </div>
                 </div>
             </div>
-            <div class="panel" style="background-image: url('https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2')">
+            <div class="panel" id="artist-panel" style="background-image: url('https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2')">
                 <div class="panel-content">
-                    <h3>Continuous Learning</h3>
-                    <p>Always expanding my knowledge</p>
+                    <h3>Artist of the Day</h3>
+                    <p id="artist-name"></p>
+                    <p id="artwork-title" class="artwork-title"></p>
                 </div>
             </div>
         </div>
@@ -561,6 +626,80 @@
 
         // Set the quote when the page loads
         document.addEventListener('DOMContentLoaded', setRandomQuote);
+
+        function updateCalendar() {
+            const date = new Date();
+            const options = { 
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            
+            const month = date.toLocaleString('en-US', { month: 'long' });
+            const day = date.toLocaleString('en-US', { day: 'numeric' });
+            const weekday = date.toLocaleString('en-US', { weekday: 'long' });
+            const year = date.toLocaleString('en-US', { year: 'numeric' });
+            
+            document.getElementById('calendar-month').textContent = month;
+            document.getElementById('calendar-day').textContent = day;
+            document.getElementById('calendar-weekday').textContent = weekday;
+            document.getElementById('calendar-year').textContent = year;
+        }
+
+        // Update the calendar when the page loads
+        document.addEventListener('DOMContentLoaded', updateCalendar);
+
+        // Array of artists and their works
+        const artists = [
+            {
+                name: "Vincent van Gogh",
+                artwork: "The Starry Night",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+            },
+            {
+                name: "Gustav Klimt",
+                artwork: "The Kiss",
+                image: "https://upload.wikimedia.org/wikipedia/commons/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg"
+            },
+            {
+                name: "Johannes Vermeer",
+                artwork: "Girl with a Pearl Earring",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/800px-1665_Girl_with_a_Pearl_Earring.jpg"
+            },
+            {
+                name: "Leonardo da Vinci",
+                artwork: "Mona Lisa",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/687px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg"
+            },
+            {
+                name: "Katsushika Hokusai",
+                artwork: "The Great Wave off Kanagawa",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/1280px-Tsunami_by_hokusai_19th_century.jpg"
+            },
+            {
+                name: "Claude Monet",
+                artwork: "Water Lilies",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg/1280px-Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg"
+            }
+        ];
+
+        function setDailyArtist() {
+            const randomIndex = Math.floor(Math.random() * artists.length);
+            const artist = artists[randomIndex];
+            
+            // Update the panel content
+            document.getElementById('artist-name').textContent = artist.name;
+            document.getElementById('artwork-title').textContent = artist.artwork;
+            
+            // Update the panel background with the artwork
+            document.getElementById('artist-panel').style.backgroundImage = `url('${artist.image}')`;
+        }
+
+        // Set the artist when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            setDailyArtist();
+        });
     </script>
 
     <section id="contact">
